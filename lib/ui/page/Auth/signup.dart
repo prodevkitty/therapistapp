@@ -56,6 +56,11 @@ class _SignupState extends State<Signup> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 80,
+              height: 80,
+              child: Image.asset('assets/images/logo_therabot.png'),
+            ),
             _entryField('Name', controller: _nameController),
             _entryField('Enter email',
                 controller: _emailController, isEmail: true),
@@ -145,7 +150,7 @@ class _SignupState extends State<Signup> {
       email: _emailController.text.toLowerCase(),
       bio: 'Edit profile to update bio',
       // contact:  _mobileController.text,
-      displayName: _nameController.text,
+      userName: _nameController.text,
       dob: DateTime(1950, DateTime.now().month, DateTime.now().day + 3)
           .toString(),
       location: 'Somewhere in universe',

@@ -105,6 +105,9 @@ flutter:
     - assets/images/bulb.png
     - assets/images/google_logo.png
     - assets/images/error_image.png
+    - assets/images/logo_therabot_with_name.png
+    - assets/images/logo_therabot.png
+    - assets/images/back.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

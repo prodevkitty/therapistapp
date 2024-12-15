@@ -43,7 +43,13 @@ class _SignInState extends State<SignIn> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(height: 150),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 80,
+              height: 80,
+              child: Image.asset('assets/images/logo_therabot.png'),
+            ),
+            const SizedBox(height: 40),
             _entryField('Enter email', controller: _emailController),
             _entryField('Enter password',
                 controller: _passwordController, isPassword: true),

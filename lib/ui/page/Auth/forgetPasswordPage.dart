@@ -40,6 +40,11 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 80,
+              height: 80,
+              child: Image.asset('assets/images/logo_therabot.png'),
+            ),
             _label(),
             const SizedBox(
               height: 50,
@@ -71,7 +76,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
               borderRadius: BorderRadius.all(Radius.circular(30.0)),
               borderSide: BorderSide(color: Colors.blue)),
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+              const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         ),
       ),
     );

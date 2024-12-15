@@ -42,7 +42,7 @@ class AuthState extends AppState {
     try {
       isBusy = true;
       final response = await http.post(
-        Uri.parse('http://localhost:8001/login'),
+        Uri.parse('http://localhost:8001/auth/token'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -54,8 +54,17 @@ class AuthState extends AppState {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        
+        final fcmToken = data['access_token'];
+        final userName = data['user_name'];
         userId = data['user_id'];
-        _userModel = UserModel.fromJson(data['user']);
+        _userModel = UserModel(
+          userId: userId,
+          userName: userName,
+          email: email,
+          fcmToken: fcmToken,
+        );
+
         authStatus = AuthStatus.LOGGED_IN;
         notifyListeners();
         return userId;
@@ -77,22 +86,29 @@ class AuthState extends AppState {
     try {
       isBusy = true;
       final response = await http.post(
-        Uri.parse('http://localhost:8001/register'),
+        Uri.parse('http://localhost:8001/auth/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
           'email': userModel.email!,
           'password': password,
-          'displayName': userModel.displayName!,
-          'profilePic': userModel.profilePic!,
+          'username': userModel.userName!,
         }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final fcmToken = data['access_token'];
+        final userName = data['user_name'];
         userId = data['user_id'];
-        _userModel = UserModel.fromJson(data['user']);
+        _userModel = UserModel(
+          userId: userId,
+          userName: userName,
+          email: userModel.email,
+          fcmToken: fcmToken,
+        );
+        
         authStatus = AuthStatus.LOGGED_IN;
         notifyListeners();
         return userId;
@@ -110,33 +126,57 @@ class AuthState extends AppState {
 
   /// Fetch current user profile
   Future<UserModel?> getCurrentUser({required BuildContext context}) async {
-    try {
-      isBusy = true;
-      final response = await http.get(
-        Uri.parse('http://localhost:8001/current_user'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
+    // try {
+    //   isBusy = true;
+    //   final response = await http.get(
+    //     Uri.parse('http://localhost:8001/current_user'),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     },
+    //   );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        userId = data['user_id'];
-        _userModel = UserModel.fromJson(data['user']);
-        authStatus = AuthStatus.LOGGED_IN;
-        notifyListeners();
-        return null;
-      } else {
-        authStatus = AuthStatus.NOT_LOGGED_IN;
-        return null;
-      }
-    } catch (error) {
-      authStatus = AuthStatus.NOT_LOGGED_IN;
-      Utility.customSnackBar(context, error.toString());
-      return null;
-    } finally {
-      isBusy = false;
-    }
+    //   if (response.statusCode == 200) {
+    //     final data = jsonDecode(response.body);
+    //     userId = data['user_id'];
+    //     _userModel = UserModel.fromJson(data['user']);
+    //     authStatus = AuthStatus.LOGGED_IN;
+    //     notifyListeners();
+    //     return null;
+    //   } else {
+    //     authStatus = AuthStatus.NOT_LOGGED_IN;
+    //     return null;
+    //   }
+    // } catch (error) {
+    //   authStatus = AuthStatus.NOT_LOGGED_IN;
+    //   Utility.customSnackBar(context, error.toString());
+    //   return null;
+    // } finally {
+    //   isBusy = false;
+    // }
+  // Return static example data based on UserModel
+    _userModel = UserModel(
+      userId: 'example_user_id',
+      userName: 'example_user_name',
+      email: 'example@example.com',
+      displayName: 'Example User',
+      profilePic: 'https://example.com/profile_pic.png',
+      bannerImage: 'https://example.com/banner_image.png',
+      contact: '1234567890',
+      bio: 'This is an example bio',
+      location: 'Example Location',
+      dob: '2000-01-01',
+      createdAt: '2023-01-01',
+      isVerified: true,
+      followers: 100,
+      following: 50,
+      fcmToken: 'example_fcm_token',
+      followersList: ['follower1', 'follower2'],
+      followingList: ['following1', 'following2'],
+      isEmailVerified: true,
+  );
+  authStatus = AuthStatus.LOGGED_IN;
+  notifyListeners();
+  return _userModel;
   }
 
   /// Send password reset link to email
@@ -169,20 +209,41 @@ class AuthState extends AppState {
       {File? image, File? bannerImage, required BuildContext context}) async {
     try {
       if (image == null && bannerImage == null) {
-        final response = await http.put(
-          Uri.parse('http://localhost:8001/update_profile'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(userModel!.toJson()),
-        );
+        // final response = await http.put(
+        //   Uri.parse('http://localhost:8001/update_profile'),
+        //   headers: <String, String>{
+        //     'Content-Type': 'application/json; charset=UTF-8',
+        //   },
+        //   body: jsonEncode(userModel!.toJson()),
+        // );
 
-        if (response.statusCode == 200) {
-          _userModel = userModel;
-          notifyListeners();
-        } else {
-          Utility.customSnackBar(context, 'Failed to update profile');
-        }
+        // if (response.statusCode == 200) {
+        //   _userModel = userModel;
+        //   notifyListeners();
+        // } else {
+        //   Utility.customSnackBar(context, 'Failed to update profile');
+        // }
+        _userModel = UserModel(
+          userId: 'example_user_id',
+          userName: 'example_user_name',
+          email: 'example@example.com',
+          displayName: 'Example User',
+          profilePic: 'https://example.com/profile_pic.png',
+          bannerImage: 'https://example.com/banner_image.png',
+          contact: '1234567890',
+          bio: 'This is an example bio',
+          location: 'Example Location',
+          dob: '2000-01-01',
+          createdAt: '2023-01-01',
+          isVerified: true,
+          followers: 100,
+          following: 50,
+          fcmToken: 'example_fcm_token',
+          followersList: ['follower1', 'follower2'],
+          followingList: ['following1', 'following2'],
+          isEmailVerified: true,
+        );
+      notifyListeners();
       } else {
         // Handle image upload separately if needed
       }
@@ -194,19 +255,40 @@ class AuthState extends AppState {
   /// `Fetch` user `detail` whose userId is passed
   Future<UserModel?> getUserDetail(String userId, {required BuildContext context}) async {
     try {
-      final response = await http.get(
-        Uri.parse('http://localhost:8001/user/$userId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
+    //   final response = await http.get(
+    //     Uri.parse('http://localhost:8001/user/$userId'),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     },
+    //   );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return UserModel.fromJson(data);
-      } else {
-        return null;
-      }
+    //   if (response.statusCode == 200) {
+    //     final data = jsonDecode(response.body);
+    //     return UserModel.fromJson(data);
+    //   } else {
+    //     return null;
+    //   }
+    // // Return static example data based on UserModel
+      return UserModel(
+        userId: 'example_user_id',
+        userName: 'example_user_name',
+        email: 'example@example.com',
+        displayName: 'Example User',
+        profilePic: 'https://example.com/profile_pic.png',
+        bannerImage: 'https://example.com/banner_image.png',
+        contact: '1234567890',
+        bio: 'This is an example bio',
+        location: 'Example Location',
+        dob: '2000-01-01',
+        createdAt: '2023-01-01',
+        isVerified: true,
+        followers: 100,
+        following: 50,
+        fcmToken: 'example_fcm_token',
+        followersList: ['follower1', 'follower2'],
+        followingList: ['following1', 'following2'],
+        isEmailVerified: true,
+      );
     } catch (error) {
       Utility.customSnackBar(context, error.toString());
       return null;
@@ -218,16 +300,40 @@ class AuthState extends AppState {
   FutureOr<void> getProfileUser({String? userProfileId, required BuildContext context}) async {
     try {
       userProfileId = userProfileId ?? userId;
-      final response = await http.get(
-        Uri.parse('http://localhost:8001/profile/$userProfileId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
+      // final response = await http.get(
+      //   Uri.parse('http://localhost:8001/profile/$userProfileId'),
+      //   headers: <String, String>{
+      //     'Content-Type': 'application/json; charset=UTF-8',
+      //   },
+      // );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        _userModel = UserModel.fromJson(data);
+      // if (response.statusCode == 200) {
+      //   final data = jsonDecode(response.body);
+      //   _userModel = UserModel.fromJson(data);
+      //   notifyListeners();
+      // }
+      // Return static example data based on UserModel
+      {
+        _userModel = UserModel(
+          userId: 'example_user_id',
+          userName: 'example_user_name',
+          email: 'example@example.com',
+          displayName: 'Example User',
+          profilePic: 'https://example.com/profile_pic.png',
+          bannerImage: 'https://example.com/banner_image.png',
+          contact: '1234567890',
+          bio: 'This is an example bio',
+          location: 'Example Location',
+          dob: '2000-01-01',
+          createdAt: '2023-01-01',
+          isVerified: true,
+          followers: 100,
+          following: 50,
+          fcmToken: 'example_fcm_token',
+          followersList: ['follower1', 'follower2'],
+          followingList: ['following1', 'following2'],
+          isEmailVerified: true,
+        );
         notifyListeners();
       }
     } catch (error) {

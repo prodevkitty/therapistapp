@@ -46,15 +46,21 @@ class _WelcomePageState extends State<WelcomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(
+              height: 200,
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width - 80,
-              height: 40,
-              child: Image.asset('assets/images/icon-480.png'),
+              height: 100,
+              child: Image.asset('assets/images/logo_therabot_with_name.png'),
             ),
             const Spacer(),
-            const TitleText(
-              'See what\'s happening in the world right now.',
-              fontSize: 25,
+            const Center(
+              child: TitleText(
+                'Welcome to TheraBot!',
+                fontSize: 25,
+                color: Color(0xFF1DA1F2),
+              ),
             ),
             const SizedBox(
               height: 20,
