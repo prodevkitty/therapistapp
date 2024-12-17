@@ -408,77 +408,77 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _tweetList(BuildContext context, ExampleProfileState, authState,
-      List<FeedModel>? tweetsList, bool isReply, bool isMedia) {
-    List<FeedModel>? list;
+  // Widget _tweetList(BuildContext context, ExampleProfileState, authState,
+  //     List<FeedModel>? tweetsList, bool isReply, bool isMedia) {
+  //   List<FeedModel>? list;
 
-    /// If user hasn't tweeted yet
-    if (tweetsList == null) {
-      // cprint('No Tweet available');
-    } else if (isMedia) {
-      /// Display all Tweets with media file
+  //   /// If user hasn't tweeted yet
+  //   if (tweetsList == null) {
+  //     // cprint('No Tweet available');
+  //   } else if (isMedia) {
+  //     /// Display all Tweets with media file
 
-      list = tweetsList.where((x) => x.imagePath != null).toList();
-    } else if (!isReply) {
-      /// Display all independent Tweets
-      /// No comments Tweet will display
+  //     list = tweetsList.where((x) => x.imagePath != null).toList();
+  //   } else if (!isReply) {
+  //     /// Display all independent Tweets
+  //     /// No comments Tweet will display
 
-      list = tweetsList
-          .where((x) => x.parentkey == null || x.childRetwetkey != null)
-          .toList();
-    } else {
-      /// Display all reply Tweets
-      /// No independent tweet will display
-      list = tweetsList
-          .where((x) => x.parentkey != null && x.childRetwetkey == null)
-          .toList();
-    }
+  //     list = tweetsList
+  //         .where((x) => x.parentkey == null || x.childRetwetkey != null)
+  //         .toList();
+  //   } else {
+  //     /// Display all reply Tweets
+  //     /// No independent tweet will display
+  //     list = tweetsList
+  //         .where((x) => x.parentkey != null && x.childRetwetkey == null)
+  //         .toList();
+  //   }
 
-    /// if [authState.isbusy] is true then an loading indicator will be displayed on screen.
-    return authState.isbusy
-        ? SizedBox(
-            height: context.height - 180,
-            child: const CustomScreenLoader(
-              height: double.infinity,
-              width: double.infinity,
-              backgroundColor: Colors.white,
-            ),
-          )
+  //   /// if [authState.isbusy] is true then an loading indicator will be displayed on screen.
+  //   return authState.isbusy
+  //       ? SizedBox(
+  //           height: context.height - 180,
+  //           child: const CustomScreenLoader(
+  //             height: double.infinity,
+  //             width: double.infinity,
+  //             backgroundColor: Colors.white,
+  //           ),
+  //         )
 
-        /// if tweet list is empty or null then need to show user a message
-        : list == null || list.isEmpty
-            ? Container(
-                padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
-                child: NotifyText(
-                  title: isMyProfile
-                      ? 'You haven\'t ${isReply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}'
-                      : '${authState.profileUserModel.userName} hasn\'t ${isReply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}',
-                  subTitle: isMyProfile
-                      ? 'Tap tweet button to add new'
-                      : 'Once he\'ll do, they will be shown up here',
-                ),
-              )
+  //       /// if tweet list is empty or null then need to show user a message
+  //       : list == null || list.isEmpty
+  //           ? Container(
+  //               padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
+  //               child: NotifyText(
+  //                 title: isMyProfile
+  //                     ? 'You haven\'t ${isReply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}'
+  //                     : '${authState.profileUserModel.userName} hasn\'t ${isReply ? 'reply to any Tweet' : isMedia ? 'post any media Tweet yet' : 'post any Tweet yet'}',
+  //                 subTitle: isMyProfile
+  //                     ? 'Tap tweet button to add new'
+  //                     : 'Once he\'ll do, they will be shown up here',
+  //               ),
+  //             )
 
-            /// If tweets available then tweet list will displayed
-            : ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 0),
-                itemCount: list.length,
-                itemBuilder: (context, index) => Container(
-                  color: TwitterColor.white,
-                  child: Tweet(
-                    model: list![index],
-                    isDisplayOnProfile: true,
-                    trailing: TweetBottomSheet().tweetOptionIcon(
-                      context,
-                      model: list[index],
-                      type: TweetType.Tweet,
-                      scaffoldKey: scaffoldKey,
-                    ),
-                    scaffoldKey: scaffoldKey,
-                  ),
-                ),
-              );
-  }
+  //           /// If tweets available then tweet list will displayed
+  //           : ListView.builder(
+  //               padding: const EdgeInsets.symmetric(vertical: 0),
+  //               itemCount: list.length,
+  //               itemBuilder: (context, index) => Container(
+  //                 color: TwitterColor.white,
+  //                 child: Tweet(
+  //                   model: list![index],
+  //                   isDisplayOnProfile: true,
+  //                   trailing: TweetBottomSheet().tweetOptionIcon(
+  //                     context,
+  //                     model: list[index],
+  //                     type: TweetType.Tweet,
+  //                     scaffoldKey: scaffoldKey,
+  //                   ),
+  //                   scaffoldKey: scaffoldKey,
+  //                 ),
+  //               ),
+  //             );
+  // }
 }
 
 class UserNameRowWidget extends StatelessWidget {

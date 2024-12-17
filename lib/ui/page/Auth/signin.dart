@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/state/authState.dart';
+import 'package:therapistapp/ui/page/homePage.dart';
 import 'package:therapistapp/ui/theme/theme.dart';
 import 'package:therapistapp/widgets/customFlatButton.dart';
 import 'package:therapistapp/widgets/customWidgets.dart';
@@ -8,9 +10,7 @@ import 'package:therapistapp/widgets/newWidget/customLoader.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
-  final VoidCallback? loginCallback;
-
-  const SignIn({Key? key, this.loginCallback}) : super(key: key);
+  const SignIn({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SignInState();
 }
@@ -126,7 +126,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  void _emailLogin() {
+  void _emailLogin() async {
     var state = Provider.of<AuthState>(context, listen: false);
     if (state.isbusy) {
       return;
@@ -135,20 +135,20 @@ class _SignInState extends State<SignIn> {
     var isValid = Utility.validateCredentials(
         context, _emailController.text, _passwordController.text);
     if (isValid) {
-      state
-          .signIn(_emailController.text, _passwordController.text,
-              context: context)
-          .then((status) {
-        if (state.userModel != null) {
-          loader.hideLoader();
-          Navigator.pop(context);
-          widget.loginCallback!();
-        } else {
-          cprint('Unable to login', errorIn: '_emailLoginButton');
-          loader.hideLoader();
-        }
-      });
+      String? token = await state.signIn(
+          _emailController.text, _passwordController.text,
+          context: context);
+      loader.hideLoader();
+
+      if (token != null) {
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setString('token', token);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => HomePage()));
+      }
     } else {
+      cprint('Unable to login', errorIn: '_emailLoginButton');
       loader.hideLoader();
     }
   }

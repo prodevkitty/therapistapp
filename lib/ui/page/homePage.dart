@@ -6,21 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/model/push_notification_model.dart';
-import 'package:therapistapp/resource/push_notification_service.dart';
 import 'package:therapistapp/state/appState.dart';
 import 'package:therapistapp/state/authState.dart';
 import 'package:therapistapp/state/chats/chatState.dart';
-import 'package:therapistapp/state/suggestionUserState.dart';
 import 'package:therapistapp/state/feedState.dart';
 import 'package:therapistapp/state/notificationState.dart';
+import 'package:therapistapp/ui/page/Auth/signin.dart';
 import 'package:therapistapp/ui/page/feed/feedPage.dart';
 import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
-import 'package:therapistapp/ui/page/feed/suggestedUsers.dart';
 import 'package:therapistapp/ui/page/profile/profilePage.dart';
 import 'package:therapistapp/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
 
-import 'common/locator.dart';
 import 'common/sidebar.dart';
 import 'notification/notificationPage.dart';
 
@@ -35,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   final refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   int pageIndex = 0;
   // ignore: cancel_subscription
-  late StreamSubscription<PushNotificationModel> pushNotificationSubscription;
+  // late StreamSubscription<PushNotificationModel> pushNotificationSubscription;
   @override
   void initState() {
     // initDynamicLinks();
@@ -53,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    pushNotificationSubscription.cancel();
+    // pushNotificationSubscription.cancel();
     super.dispose();
   }
 
@@ -71,30 +68,29 @@ class _HomePageState extends State<HomePage> {
   void initNotification() {
     var state = Provider.of<NotificationState>(context, listen: false);
     var authState = Provider.of<AuthState>(context, listen: false);
+    if (authState.userId == null) {
+      // Redirect to login page if user is not authenticated
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignIn()),
+      );
+      return;
+    }
     state.databaseInit(authState.userId);
 
-    /// configure push notifications
-    state.initFirebaseService();
+    // Configure push notifications
+    // state.initFirebaseService();
 
-    /// Subscribe the push notifications
-    /// Whenever devices receive push notification, `listenPushNotification` callback will trigger.
-    pushNotificationSubscription = getIt<PushNotificationService>()
-        .pushNotificationResponseStream
-        .listen(listenPushNotification);
+    // Subscribe to push notifications
+    // pushNotificationSubscription = getIt<PushNotificationService>()
+        // .pushNotificationResponseStream
+        // .listen(listenPushNotification);
   }
 
-  /// Listen for every push notifications when app is in background
-  /// Check for push notifications when app is launched by tapping on push notifications from system tray.
-  /// If notification type is `NotificationType.Message` then chat screen will open
-  /// If notification type is `NotificationType.Mention` then user profile will open who tagged/mentioned you in a tweet
   void listenPushNotification(PushNotificationModel model) {
     final authState = Provider.of<AuthState>(context, listen: false);
     var state = Provider.of<NotificationState>(context, listen: false);
 
-    /// Check if user receive chat notification
-    /// Redirect to chat screen
-    /// `model.data.senderId` is a user id who sends you a message
-    /// `model.data.receiverId` is a your user id.
     if (model.type == NotificationType.Message.toString() ) {
       /// Get sender profile detail from firebase
       state.getUserDetail(model.senderId).then((user) {
@@ -103,13 +99,6 @@ class _HomePageState extends State<HomePage> {
         Navigator.pushNamed(context, '/ChatScreenPage');
       });
     }
-
-    /// Checks for user tag tweet notification
-    /// Redirect user to tweet detail if
-    /// Tweet contains
-    /// If you are mentioned in tweet then it redirect to user profile who mentioned you in a tweet
-    /// You can check that tweet on his profile timeline
-    /// `model.data.senderId` is user id who tagged you in a tweet
     else if (model.type == NotificationType.Mention.toString()) {
       var feedState = Provider.of<FeedState>(context, listen: false);
       feedState.getPostDetailFromDatabase(model.tweetId);
@@ -195,14 +184,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AuthState>();
-    context.read<SuggestionsState>().initUser(state.userModel);
-
-    if (context
-        .select<SuggestionsState, bool>((state) => state.displaySuggestions)) {
-      return SuggestedUsers();
-    }
-
     return Scaffold(
       key: _scaffoldKey,
       bottomNavigationBar: const BottomMenubar(),
@@ -214,8 +195,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-        DiagnosticsProperty<StreamSubscription<PushNotificationModel>>(
-            'pushNotificationSubscription', pushNotificationSubscription));
+    // properties.add(
+    //     DiagnosticsProperty<StreamSubscription<PushNotificationModel>>(
+    //         'pushNotificationSubscription', pushNotificationSubscription));
   }
 }

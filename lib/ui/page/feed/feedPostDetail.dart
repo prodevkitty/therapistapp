@@ -47,23 +47,11 @@ class _FeedPostDetailState extends State<FeedPostDetail> {
   }
 
   Widget _commentRow(FeedModel model) {
-    return Tweet(
-      model: model,
-      type: TweetType.Reply,
-      trailing: TweetBottomSheet().tweetOptionIcon(context,
-          scaffoldKey: scaffoldKey, model: model, type: TweetType.Reply),
-      scaffoldKey: scaffoldKey,
-    );
+    return Container();
   }
 
   Widget _tweetDetail(FeedModel model) {
-    return Tweet(
-      model: model,
-      type: TweetType.Detail,
-      trailing: TweetBottomSheet().tweetOptionIcon(context,
-          scaffoldKey: scaffoldKey, model: model, type: TweetType.Detail),
-      scaffoldKey: scaffoldKey,
-    );
+    return Container();
   }
 
   void addLikeToComment(String commentId) {

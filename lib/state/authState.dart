@@ -57,17 +57,58 @@ class AuthState extends AppState {
         
         final fcmToken = data['access_token'];
         final userName = data['user_name'];
-        userId = data['user_id'];
+        userId = data['user_id'].toString();
         _userModel = UserModel(
           userId: userId,
           userName: userName,
           email: email,
           fcmToken: fcmToken,
         );
+    
+        // authStatus = AuthStatus.LOGGED_IN;
+        // notifyListeners();
+        return fcmToken;
+      } else {
+        Utility.customSnackBar(context, 'Invalid credentials');
+        return null;
+      }
+    } catch (error) {
+      Utility.customSnackBar(context, error.toString());
+      return null;
+    } finally {
+      isBusy = false;
+    }
+  }
 
-        authStatus = AuthStatus.LOGGED_IN;
-        notifyListeners();
-        return userId;
+Future<String?> loginJwt(String token,
+      {required BuildContext context}) async {
+    try {
+      isBusy = true;
+      final response = await http.post(
+        Uri.parse('http://localhost:8001/auth/auto-token'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'token': token,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        
+        final fcmToken = data['access_token'];
+        final userName = data['user_name'];
+        final email = data['email'];
+        userId = data['user_id'].toString();
+        _userModel = UserModel(
+          userId: userId,
+          userName: userName,
+          email: email,
+          fcmToken: fcmToken,
+        );
+    
+        return fcmToken;
       } else {
         Utility.customSnackBar(context, 'Invalid credentials');
         return null;

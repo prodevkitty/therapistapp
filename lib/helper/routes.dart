@@ -96,9 +96,7 @@ class Routes {
                   child:
                       const ComposeTweetPage(isRetweet: false, isTweet: true),
                 ));
-      case "WelcomePage":
-        return CustomRoute<bool>(
-            builder: (BuildContext context) => const WelcomePage());
+
       case "SignIn":
         return CustomRoute<bool>(builder: (BuildContext context) => SignIn());
       case "SignUp":

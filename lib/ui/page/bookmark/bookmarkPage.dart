@@ -44,11 +44,12 @@ class BookmarkPageBody extends StatelessWidget {
   Widget _tweet(BuildContext context, FeedModel model) {
     return Container(
       color: Colors.white,
-      child: Tweet(
-        model: model,
-        type: TweetType.Tweet,
-        scaffoldKey: GlobalKey<ScaffoldState>(),
-      ),
+      // child: Tweet(
+      //   model: model,
+      //   type: TweetType.Tweet,
+      //   scaffoldKey: GlobalKey<ScaffoldState>(),
+      // ),
+      child: Container(),
     );
   }
 

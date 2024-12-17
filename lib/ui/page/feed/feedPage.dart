@@ -23,11 +23,11 @@ class FeedPage extends StatelessWidget {
   Widget _floatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.of(context).pushNamed('/CreateFeedPage/tweet');
+        Navigator.of(context).pushNamed('/ChatScreenPage');
       },
       child: customIcon(
         context,
-        icon: AppIcon.fabTweet,
+        icon: Icons.chat,
         isTwitterIcon: true,
         iconColor: Theme.of(context).colorScheme.onPrimary,
         size: 25,
@@ -106,15 +106,7 @@ class _FeedPageBody extends StatelessWidget {
                             (model) {
                               return Container(
                                 color: Colors.white,
-                                child: Tweet(
-                                  model: model,
-                                  trailing: TweetBottomSheet().tweetOptionIcon(
-                                      context,
-                                      model: model,
-                                      type: TweetType.Tweet,
-                                      scaffoldKey: scaffoldKey),
-                                  scaffoldKey: scaffoldKey,
-                                ),
+                                child: Container()
                               );
                             },
                           ).toList(),

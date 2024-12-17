@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/state/authState.dart';
 import 'package:therapistapp/ui/page/Auth/selectAuthMethod.dart';
+import 'package:therapistapp/ui/page/Auth/signin.dart';
 import 'package:therapistapp/ui/page/common/updateApp.dart';
 import 'package:therapistapp/ui/page/homePage.dart';
 import 'package:therapistapp/ui/theme/theme.dart';
@@ -32,14 +34,45 @@ class _SplashPageState extends State<SplashPage> {
   /// Check if current app is updated app or not
   /// If app is not updated then redirect user to update app screen
   void timer() async {
-    final isAppUpdated = await _checkAppVersion();
-    if (isAppUpdated) {
-      cprint("App is updated");
-      Future.delayed(const Duration(seconds: 1)).then((_) {
+    cprint("App is updated");
+    Future.delayed(const Duration(seconds: 1)).then((_) async {
+      // var state = Provider.of<AuthState>(context, listen: false);
+      // state.getCurrentUser(context: context);
+
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      String token = (sharedPreferences.get('token') ?? '') as String;
+      // API call
+      if (token.isNotEmpty) {
         var state = Provider.of<AuthState>(context, listen: false);
-        state.getCurrentUser(context: context);
-      });
-    }
+        if (state.isbusy) {
+          return;
+        }
+        String? res = await state.loginJwt(token, context: context);
+
+        if (res != null) {
+          SharedPreferences sharedPreferences =
+              await SharedPreferences.getInstance();
+          sharedPreferences.setString('token', res);
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => HomePage()));
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignIn(),
+            ),
+          );
+        }
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignIn(),
+          ),
+        );
+      }
+    });
   }
 
   /// Return installed app version
@@ -48,38 +81,6 @@ class _SplashPageState extends State<SplashPage> {
   /// User will not be able to see home screen
   /// User will redirected to update app screen.
   /// Once user update app with latest version and back to app then user automatically redirected to welcome / Home page
-  Future<bool> _checkAppVersion() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final currentAppVersion = packageInfo.version;
-    final buildNo = packageInfo.buildNumber;
-    final config = await _getAppVersionFromFirebaseConfig();
-
-    if (config != null &&
-        config['name'] == currentAppVersion &&
-        config['versions'].contains(int.tryParse(buildNo))) {
-      return true;
-    } else {
-      if (kDebugMode) {
-        cprint("Latest version of app is not installed on your system");
-        cprint(
-            "This is for testing purpose only. In debug mode update screen will not be open up");
-        cprint(
-            "If you are planning to publish app on store then please update app version in firebase config");
-        return true;
-      }
-      Navigator.pushReplacement(context, UpdateApp.getRoute());
-      return false;
-    }
-  }
-
-  /// Returns example app version data
-  Future<Map?> _getAppVersionFromFirebaseConfig() async {
-    const result = {
-      "name": "1.0.0",
-      "versions": [1]
-    };
-    return result;
-  }
 
   Widget _body() {
     var height = 150.0;
@@ -128,7 +129,7 @@ class _SplashPageState extends State<SplashPage> {
       body: state.authStatus == AuthStatus.NOT_DETERMINED
           ? _body()
           : state.authStatus == AuthStatus.NOT_LOGGED_IN
-              ? const WelcomePage()
+              ? const SignIn()
               : const HomePage(),
     );
   }

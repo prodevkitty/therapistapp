@@ -32,12 +32,7 @@ class ParentTweetWidget extends StatelessWidget {
       future: feedstate.fetchTweet(childRetwetkey),
       builder: (context, AsyncSnapshot<FeedModel?> snapshot) {
         if (snapshot.hasData) {
-          return Tweet(
-            model: snapshot.data!,
-            type: TweetType.ParentTweet,
-            trailing: trailing,
-            scaffoldKey: GlobalKey<ScaffoldState>(),
-          );
+          return Container();
         }
         if ((snapshot.connectionState == ConnectionState.done ||
                 snapshot.connectionState == ConnectionState.waiting) &&

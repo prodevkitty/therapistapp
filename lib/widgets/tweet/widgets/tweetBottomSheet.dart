@@ -561,15 +561,7 @@ class TweetBottomSheet {
             Navigator.push(
               context,
               ShareWidget.getRoute(
-                  child: type != null
-                      ? Tweet(
-                          model: model,
-                          type: type,
-                          scaffoldKey: GlobalKey<ScaffoldState>(),
-                        )
-                      : Tweet(
-                          model: model,
-                          scaffoldKey: GlobalKey<ScaffoldState>()),
+                  child:Container(),
                   id: "tweet/${model.key}",
                   socialMetaTagParameters: socialMetaTagParameters),
             );

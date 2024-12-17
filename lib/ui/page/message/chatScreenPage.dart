@@ -245,7 +245,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   @override
   Widget build(BuildContext context) {
     state = Provider.of<ChatState>(context, listen: false);
-    userImage = state.chatUser!.profilePic!;
+    // userImage = state.chatUser!.profilePic!;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -255,14 +255,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               UrlText(
-                text: state.chatUser!.displayName!,
+                text:' state.chatUser!.displayName!',
                 style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                state.chatUser!.userName!,
+                'state.chatUser!.userName!',
                 style: const TextStyle(color: AppColor.darkGrey, fontSize: 15),
               )
             ],
