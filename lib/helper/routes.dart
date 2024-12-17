@@ -165,10 +165,10 @@ class Routes {
         return CustomRoute<bool>(
           builder: (BuildContext context) => const AboutPage(),
         );
-      case "ConversationInformation":
-        return CustomRoute<bool>(
-          builder: (BuildContext context) => const ConversationInformation(),
-        );
+      // case "ConversationInformation":
+      //   return CustomRoute<bool>(
+      //     builder: (BuildContext context) => const ConversationInformation(),
+      //   );
       case "FollowerListPage":
         return CustomRoute<bool>(
           builder: (BuildContext context) => FollowerListPage(),

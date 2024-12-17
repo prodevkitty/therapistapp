@@ -105,8 +105,8 @@ class _ProfilePageState extends State<ProfilePage>
                   if (d.title == "Share") {
                     shareProfile(context);
                   } else if (d.title == "QR code") {
-                    Navigator.push(context,
-                        ScanScreen.getRoute(authState.profileUserModel));
+                    // Navigator.push(context,
+                        // ScanScreen.getRoute(authState.profileUserModel));
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -191,9 +191,6 @@ class _ProfilePageState extends State<ProfilePage>
                                       ),
                                       onPressed: () {
                                         if (!isMyProfile) {
-                                          final chatState = Provider.of<ChatState>(context, listen: false);
-                                          chatState.setChatUser =
-                                              authState.profileUserModel;
                                           Navigator.pushNamed(
                                               context, '/ChatScreenPage');
                                         }

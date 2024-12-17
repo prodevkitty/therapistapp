@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:therapistapp/helper/utility.dart';
-import 'package:therapistapp/model/chatModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:therapistapp/helper/socket_manager.dart';
 import 'package:therapistapp/state/authState.dart';
-import 'package:therapistapp/state/chats/chatState.dart';
 import 'package:therapistapp/ui/page/profile/widgets/circular_image.dart';
 import 'package:therapistapp/ui/theme/theme.dart';
 import 'package:therapistapp/widgets/url_text/customUrlText.dart';
@@ -20,14 +19,17 @@ class ChatScreenPage extends StatefulWidget {
 class _ChatScreenPageState extends State<ChatScreenPage> {
   final messageController = TextEditingController();
   String? senderId;
-  late String userImage;
-  late ChatState state;
+  String userImage =
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SRRmhH4X5N2e4QalcoxVbzYsD44C-sQv-w&s';
   late ScrollController _controller;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+
+  List<Map<String, String>> messages = [];
 
   @override
   void dispose() {
     messageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -35,16 +37,45 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   void initState() {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _controller = ScrollController();
-    final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
-    chatState.setIsChatScreenOpen = true;
+    SharedPreferences.getInstance().then((sp) {
+      SocketManager().initializeSocket(sp.getString('token')!, (data) {
+        print('Event received: $data');
+        setState(() {
+          messages.add({'message': data['response'], 'sender': 'ai'});
+        });
+        _scrollToBottom();
+      });
+    });
     senderId = state.userId;
     super.initState();
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_controller.hasClients) {
+        _controller.animateTo(
+          _controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void submitMessage() {
+    if (messageController.text.isNotEmpty) {
+      SocketManager().sendMessage(messageController.text);
+      setState(() {
+        messages.add({'sender': 'human', 'message': messageController.text});
+      });
+      _scrollToBottom();
+    }
+    messageController.clear();
+  }
+
   Widget _chatScreenBody() {
-    final state = Provider.of<ChatState>(context);
-    if (state.messageList == null || state.messageList!.isEmpty) {
+    if (messages.isEmpty) {
       return const Center(
         child: Text(
           'No message found',
@@ -55,25 +86,22 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     return ListView.builder(
       controller: _controller,
       shrinkWrap: true,
-      reverse: true,
+      reverse: false,
       physics: const BouncingScrollPhysics(),
-      itemCount: state.messageList!.length,
-      itemBuilder: (context, index) => chatMessage(state.messageList![index]),
+      itemCount: messages.length,
+      itemBuilder: (context, index) => chatMessage(messages[index]),
     );
   }
 
-  Widget chatMessage(ChatMessage message) {
-    if (senderId == null) {
-      return Container();
-    }
-    if (message.senderId == senderId) {
-      return _message(message, true);
+  Widget chatMessage(Map<String, String> message) {
+    if (message['sender'] == 'ai') {
+      return _message(message['message'], false);
     } else {
-      return _message(message, false);
+      return _message(message['message'], true);
     }
   }
 
-  Widget _message(ChatMessage chat, bool myMessage) {
+  Widget _message(String? message, bool myMessage) {
     return Column(
       crossAxisAlignment:
           myMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -112,7 +140,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                             : TwitterColor.mystic,
                       ),
                       child: UrlText(
-                        text: chat.message!,
+                        text: message!,
                         style: TextStyle(
                           fontSize: 16,
                           color: myMessage ? TwitterColor.white : Colors.black,
@@ -132,13 +160,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 10, left: 10),
-          child: Text(
-            Utility.getChatTime(chat.createdAt),
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        )
       ],
     );
   }
@@ -155,10 +176,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Widget _bottomEntryField() {
-    return Align(
+    return Container(
       alignment: Alignment.bottomLeft,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const Divider(
             thickness: 0,
@@ -184,68 +205,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Future<bool> _onWillPop() async {
-    state.setIsChatScreenOpen = false;
-    state.closeWebSocket();
+    SocketManager().closeSocket();
     return true;
-  }
-
-  // void submitMessage() {
-  //   var authState = Provider.of<AuthState>(context, listen: false);
-  //   ChatMessage message;
-  //   message = ChatMessage(
-  //       message: messageController.text,
-  //       createdAt: DateTime.now().toUtc().toString(),
-  //       senderId: authState.userModel!.userId!,
-  //       receiverId: state.chatUser!.userId!,
-  //       seen: false,
-  //       timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
-  //       senderName: authState.user!.displayName!);
-  //   if (messageController.text.isEmpty) {
-  //     return;
-  //   }
-  //   state.onMessageSubmitted(
-  //     message, /*myUser: myUser, secondUser: secondUser*/
-  //   );
-  //   Future.delayed(const Duration(milliseconds: 50)).then((_) {
-  //     messageController.clear();
-  //   });
-  //   try {
-  //     if (state.messageList != null &&
-  //         state.messageList!.length > 1 &&
-  //         _controller.offset > 0) {
-  //       _controller.animateTo(
-  //         0.0,
-  //         curve: Curves.easeOut,
-  //         duration: const Duration(milliseconds: 300),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print("[Error] $e");
-  //   }
-  // }
-    void submitMessage() {
-    var authState = Provider.of<AuthState>(context, listen: false);
-    ChatMessage message;
-    message = ChatMessage(
-      message: messageController.text,
-      createdAt: DateTime.now().toUtc().toString(),
-      senderId: authState.userModel!.userId!,
-      receiverId: state.chatUser!.userId!,
-      seen: false,
-      timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
-      senderName: authState.userModel!.displayName!,
-    );
-    if (messageController.text.isEmpty) {
-      return;
-    }
-    state.sendMessage(message.message!, false, 'sample_token'); // Send message with a sample token
-    messageController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    state = Provider.of<ChatState>(context, listen: false);
-    // userImage = state.chatUser!.profilePic!;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -255,38 +220,30 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               UrlText(
-                text:' state.chatUser!.displayName!',
+                text: 'Chatting',
                 style: const TextStyle(
                     color: Colors.black87,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                'state.chatUser!.userName!',
+                'Therapist AI',
                 style: const TextStyle(color: AppColor.darkGrey, fontSize: 15),
               )
             ],
           ),
           iconTheme: const IconThemeData(color: Colors.blue),
           backgroundColor: Colors.white,
-          actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.info, color: AppColor.primary),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/ConversationInformation');
-                })
-          ],
         ),
         body: SafeArea(
-          child: Stack(
+          child: Column(
             children: <Widget>[
-              Align(
+              Expanded(
+                  child: Container(
                 alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 50),
-                  child: _chatScreenBody(),
-                ),
-              ),
+                margin: EdgeInsets.symmetric(vertical: 12),
+                child: _chatScreenBody(),
+              )),
               _bottomEntryField()
             ],
           ),

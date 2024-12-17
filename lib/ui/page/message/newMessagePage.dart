@@ -30,8 +30,6 @@ class _NewMessagePageState extends State<NewMessagePage> {
   Widget _userTile(UserModel user) {
     return ListTile(
       onTap: () {
-        final chatState = Provider.of<ChatState>(context, listen: false);
-        chatState.setChatUser = user;
         Navigator.pushNamed(context, '/ChatScreenPage');
       },
       leading: CircularImage(path: user.profilePic, height: 40),

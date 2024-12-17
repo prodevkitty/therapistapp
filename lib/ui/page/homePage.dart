@@ -94,8 +94,6 @@ class _HomePageState extends State<HomePage> {
     if (model.type == NotificationType.Message.toString() ) {
       /// Get sender profile detail from firebase
       state.getUserDetail(model.senderId).then((user) {
-        final chatState = Provider.of<ChatState>(context, listen: false);
-        chatState.setChatUser = user!;
         Navigator.pushNamed(context, '/ChatScreenPage');
       });
     }
@@ -107,7 +105,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void initChat() {
-    final chatState = Provider.of<ChatState>(context, listen: false);
     final state = Provider.of<AuthState>(context, listen: false);
     // chatState.databaseInit(state.userId, state.userId);
 

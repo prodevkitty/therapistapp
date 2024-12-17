@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AppState>(create: (_) => AppState()),
         ChangeNotifierProvider<AuthState>(create: (_) => AuthState()),
         ChangeNotifierProvider<FeedState>(create: (_) => FeedState()),
-        ChangeNotifierProvider<ChatState>(create: (_) => ChatState()),
         ChangeNotifierProvider<SearchState>(create: (_) => SearchState()),
         ChangeNotifierProvider<NotificationState>(
             create: (_) => NotificationState()),

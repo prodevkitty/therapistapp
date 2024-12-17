@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:therapistapp/helper/constant.dart';
 import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/shared_prefrence_helper.dart';
 import 'package:therapistapp/helper/utility.dart';
@@ -42,7 +43,7 @@ class AuthState extends AppState {
     try {
       isBusy = true;
       final response = await http.post(
-        Uri.parse('http://localhost:8001/auth/token'),
+        Uri.parse('${Constants.serverUrl}/auth/token'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -63,6 +64,7 @@ class AuthState extends AppState {
           userName: userName,
           email: email,
           fcmToken: fcmToken,
+          displayName: userName
         );
     
         // authStatus = AuthStatus.LOGGED_IN;
@@ -85,7 +87,7 @@ Future<String?> loginJwt(String token,
     try {
       isBusy = true;
       final response = await http.post(
-        Uri.parse('http://localhost:8001/auth/auto-token'),
+        Uri.parse('${Constants.serverUrl}/auth/auto-token'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -106,6 +108,7 @@ Future<String?> loginJwt(String token,
           userName: userName,
           email: email,
           fcmToken: fcmToken,
+          displayName: userName
         );
     
         return fcmToken;
