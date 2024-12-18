@@ -130,7 +130,7 @@ Future<String?> loginJwt(String token,
     try {
       isBusy = true;
       final response = await http.post(
-        Uri.parse('http://localhost:8001/auth/register'),
+        Uri.parse('${Constants.serverUrl}/auth/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -228,7 +228,7 @@ Future<String?> loginJwt(String token,
       {required BuildContext context}) async {
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8001/forgot_password'),
+        Uri.parse('${Constants.serverUrl}forgot_password'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

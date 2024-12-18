@@ -10,7 +10,6 @@ import 'package:therapistapp/ui/theme/theme.dart';
 import 'helper/routes.dart';
 import 'state/appState.dart';
 import 'state/authState.dart';
-import 'state/chats/chatState.dart';
 import 'state/feedState.dart';
 import 'state/notificationState.dart';
 

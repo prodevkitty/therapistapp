@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:therapistapp/state/appState.dart';
 import 'package:therapistapp/ui/theme/theme.dart';
 import 'package:therapistapp/widgets/bottomMenuBar/tabItem.dart';
@@ -21,52 +22,35 @@ class _BottomMenubarState extends State<BottomMenubar> {
   }
 
   Widget _iconRow() {
-    var state = Provider.of<AppState>(
-      context,
-    );
+    var state = Provider.of<AppState>(context);
     return Container(
       height: 50,
       decoration: BoxDecoration(
-          color: Theme.of(context).bottomAppBarTheme.color,
-          boxShadow: const [
-            BoxShadow(
-                color: Colors.black12, offset: Offset(0, -.1), blurRadius: 0)
-          ]),
+        color: Theme.of(context).bottomAppBarTheme.color,
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, offset: Offset(0, -.1), blurRadius: 0),
+        ],
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _icon(null, 0,
-              icon: 0 == state.pageIndex ? AppIcon.homeFill : AppIcon.home,
-              isCustomIcon: true),
-          _icon(null, 1,
-              icon: 1 == state.pageIndex ? AppIcon.searchFill : AppIcon.search,
-              isCustomIcon: true),
-          _icon(null, 2,
-              icon: 2 == state.pageIndex
-                  ? AppIcon.notificationFill
-                  : AppIcon.notification,
-              isCustomIcon: true),
-          _icon(null, 3,
-              icon: 3 == state.pageIndex
-                  ? AppIcon.messageFill
-                  : AppIcon.messageEmpty,
-              isCustomIcon: true),
+          _icon(index: 0, icon: FontAwesomeIcons.home),
+          _icon(index: 1, icon: FontAwesomeIcons.chartLine),
+          _icon(index: 2, icon: FontAwesomeIcons.newspaper),
+          _icon(index: 3, icon: FontAwesomeIcons.phone),
         ],
       ),
     );
   }
 
-  Widget _icon(IconData? iconData, int index,
-      {bool isCustomIcon = false, IconData? icon}) {
-    if (isCustomIcon) {
-      assert(icon != null);
-    } else {
-      assert(iconData != null);
-    }
-    var state = Provider.of<AppState>(
-      context,
-    );
+  Widget _icon({
+    required int index,
+    required IconData icon,
+  }) {
+    var state = Provider.of<AppState>(context);
+    bool isActive = index == state.pageIndex;
+
     return Expanded(
       child: SizedBox(
         height: double.infinity,
@@ -83,18 +67,13 @@ class _BottomMenubarState extends State<BottomMenubar> {
               splashColor: Colors.transparent,
               padding: const EdgeInsets.all(0),
               alignment: const Alignment(0, 0),
-              icon: isCustomIcon
-                  ? customIcon(context,
-                      icon: icon!,
-                      size: 22,
-                      isTwitterIcon: true,
-                      isEnable: index == state.pageIndex)
-                  : Icon(
-                      iconData,
-                      color: index == state.pageIndex
-                          ? Theme.of(context).primaryColor
-                          : Theme.of(context).textTheme.bodySmall!.color,
-                    ),
+              icon: FaIcon(
+                icon,
+                size: isActive ? 26 : 22, // Larger size for active icon
+                color: isActive
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).textTheme.bodySmall!.color,
+              ),
               onPressed: () {
                 setState(() {
                   state.setPageIndex = index;

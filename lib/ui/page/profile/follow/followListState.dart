@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/shared_prefrence_helper.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/model/user.dart';
 import 'package:therapistapp/state/appState.dart';
 import 'package:therapistapp/ui/page/common/locator.dart';
+import 'package:therapistapp/helper/constant.dart';
 
 enum StateType { following, follower }
 
@@ -47,7 +46,7 @@ class FollowListState extends AppState {
       _currentUser!.following = _currentUser!.followingList!.length;
 
       final response1 = await http.put(
-        Uri.parse('http://localhost:8001/profile/${secondUser.userId}/followers'),
+        Uri.parse('${Constants.serverUrl}/profile/${secondUser.userId}/followers'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -59,7 +58,7 @@ class FollowListState extends AppState {
       }
 
       final response2 = await http.put(
-        Uri.parse('http://localhost:8001/profile/${_currentUser!.userId}/following'),
+        Uri.parse('${Constants.serverUrl}/profile/${_currentUser!.userId}/following'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

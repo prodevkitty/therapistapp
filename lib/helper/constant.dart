@@ -10,5 +10,5 @@ class Constants {
     'https://cdn5.f-cdn.com/contestentries/753244/11441006/57c152cc68857_thumb900.jpg',
     'https://cdn6.f-cdn.com/contestentries/753244/20994643/57c189b564237_thumb900.jpg'
   ];
-  static String serverUrl = "http://192.168.118.221:8001";
+  static String serverUrl = "http://localhost:8001";
 }

@@ -1,5 +1,6 @@
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as io_socket;
+import 'constant.dart';
 
 class SocketManager {
   static final SocketManager _instance = SocketManager._internal();
@@ -21,7 +22,7 @@ class SocketManager {
     try {
       this.token = token;
       this.onNewMessage = onNewMessage;
-      socket = io_socket.io('http://192.168.118.221:8001', <String, dynamic>{
+      socket = io_socket.io('${Constants.serverUrl}', <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,
         'auth': {'token': 'Bearer $token'},

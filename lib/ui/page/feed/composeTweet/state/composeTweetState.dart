@@ -6,6 +6,7 @@ import 'package:therapistapp/model/feedModel.dart';
 import 'package:therapistapp/model/user.dart';
 import 'package:therapistapp/state/searchState.dart';
 import 'package:therapistapp/helper/enum.dart';
+import 'package:therapistapp/helper/constant.dart';
 
 class ComposeTweetState extends ChangeNotifier {
   bool showUserList = false;
@@ -129,7 +130,7 @@ class ComposeTweetState extends ChangeNotifier {
         return Future.value(null);
       }
       // Replace this with your custom backend call to get the FCM server key
-      final response = await http.get(Uri.parse('http://localhost:8001/get_fcm_server_key'));
+      final response = await http.get(Uri.parse('${Constants.serverUrl}/get_fcm_server_key'));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         serverToken = data["key"];
@@ -271,7 +272,7 @@ class ComposeTweetState extends ChangeNotifier {
     });
 
     var response = await http.post(
-      Uri.parse('http://localhost:8001/send_notification'), // Replace with your custom backend URL
+      Uri.parse('${Constants.serverUrl}/send_notification'), // Replace with your custom backend URL
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=$serverToken',

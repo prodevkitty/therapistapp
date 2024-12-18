@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/model/user.dart';
 import 'package:therapistapp/state/appState.dart';
+import 'package:therapistapp/helper/constant.dart';
 
 class SuggestionsState extends AppState {
   List<UserModel>? _userlist;
@@ -132,7 +133,7 @@ class SuggestionsState extends AppState {
           user.followers = user.followersList!.length;
 
           final response1 = await http.put(
-            Uri.parse('http://localhost:8001/profile/${user.userId}/followers'),
+            Uri.parse('${Constants.serverUrl}/profile/${user.userId}/followers'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -152,7 +153,7 @@ class SuggestionsState extends AppState {
         currentUser!.following = currentUser!.followingList!.length;
 
         final response2 = await http.put(
-          Uri.parse('http://localhost:8001/profile/${currentUser!.userId}/following'),
+          Uri.parse('${Constants.serverUrl}/profile/${currentUser!.userId}/following'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
