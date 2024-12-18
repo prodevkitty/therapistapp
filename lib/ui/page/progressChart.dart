@@ -1,103 +1,185 @@
-// import 'package:flutter/material.dart';
-// import 'package:fl_chart/fl_chart.dart';
-// import 'package:intl/intl.dart'; // For formatting dates
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // For formatting dates
+import 'package:fl_chart/fl_chart.dart';
 
-// // Example model class to hold the progress data
-// class ProgressData {
-//   final DateTime date;
-//   final double stressLevel;
-//   final double negativeThoughtsReduction;
-//   final double positiveThoughtsIncrease;
+class ProgressData {
+  final DateTime date;
+  final double stressLevel;
+  final double negativeThoughtsReduction;
+  final double positiveThoughtsIncrease;
 
-//   ProgressData({
-//     required this.date,
-//     required this.stressLevel,
-//     required this.negativeThoughtsReduction,
-//     required this.positiveThoughtsIncrease,
-//   });
-// }
+  ProgressData({
+    required this.date,
+    required this.stressLevel,
+    required this.negativeThoughtsReduction,
+    required this.positiveThoughtsIncrease,
+  });
+}
 
-// class ProgressChart extends StatelessWidget {
-//   final List<ProgressData> progressData;
+class ProgressChart extends StatelessWidget {
+  final List<ProgressData> progressData;
 
-//   const ProgressChart({
-//     Key? key,
-//     required this.progressData,
-//   }) : super(key: key);
+  const ProgressChart({
+    Key? key,
+    required this.progressData,
+  }) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     List<FlSpot> stressSpots = [];
-//     List<FlSpot> reductionSpots = [];
-//     List<FlSpot> increaseSpots = [];
+  @override
+  Widget build(BuildContext context) {
+    List<BarChartGroupData> stressBarGroups = [];
+    List<BarChartGroupData> reductionBarGroups = [];
+    List<BarChartGroupData> increaseBarGroups = [];
 
-//     for (var entry in progressData) {
-//       stressSpots.add(FlSpot(
-//           entry.date.millisecondsSinceEpoch.toDouble(), entry.stressLevel));
-//       reductionSpots.add(FlSpot(entry.date.millisecondsSinceEpoch.toDouble(),
-//           entry.negativeThoughtsReduction));
-//       increaseSpots.add(FlSpot(entry.date.millisecondsSinceEpoch.toDouble(),
-//           entry.positiveThoughtsIncrease));
-//     }
+    for (int i = 0; i < progressData.length; i++) {
+      ProgressData entry = progressData[i];
+      double xValue = i.toDouble(); // Use the index as x-axis value
 
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Journey to Wellness'), // Static title, replace with translation if needed
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: LineChart(
-//           LineChartData(
-//             gridData: FlGridData(show: true),
-//             titlesData: FlTitlesData(
-//               bottomTitles: SideTitles(
-//                 showTitles: true,
-//                 getTextStyles: (context, value) => TextStyle(
-//                   color: Colors.black,
-//                   fontSize: 10,
-//                 ),
-//                 margin: 10,
-//                 getTitles: (value) {
-//                   DateTime date =
-//                       DateTime.fromMillisecondsSinceEpoch(value.toInt());
-//                   return DateFormat('MM/dd').format(date);
-//                 },
-//               ),
-//               leftTitles: SideTitles(showTitles: true),
-//             ),
-//             borderData: FlBorderData(show: true),
-//             lineBarsData: [
-//               LineChartBarData(
-//                 spots: stressSpots,
-//                 isCurved: true,
-//                 colors: [Colors.red],
-//                 belowBarData: BarAreaData(show: true, colors: [
-//                   Colors.red.withOpacity(0.3),
-//                 ]),
-//                 barWidth: 4,
-//               ),
-//               LineChartBarData(
-//                 spots: reductionSpots,
-//                 isCurved: true,
-//                 colors: [Colors.blue],
-//                 belowBarData: BarAreaData(show: true, colors: [
-//                   Colors.blue.withOpacity(0.3),
-//                 ]),
-//                 barWidth: 4,
-//               ),
-//               LineChartBarData(
-//                 spots: increaseSpots,
-//                 isCurved: true,
-//                 colors: [Colors.green],
-//                 belowBarData: BarAreaData(show: true, colors: [
-//                   Colors.green.withOpacity(0.3),
-//                 ]),
-//                 barWidth: 4,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+      stressBarGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: entry.stressLevel,
+              color: Colors.red,
+              width: 10,
+            ),
+          ],
+        ),
+      );
+
+      reductionBarGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: entry.negativeThoughtsReduction,
+              color: Colors.blue,
+              width: 10,
+            ),
+          ],
+        ),
+      );
+
+      increaseBarGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: entry.positiveThoughtsIncrease,
+              color: Colors.green,
+              width: 10,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Your Progress Over Time',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          // Stress Level Bar Chart
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Stress Levels',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 300,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: BarChart(
+                BarChartData(
+                  barGroups: stressBarGroups,
+                  titlesData: _buildTitlesData(progressData),
+                  borderData: FlBorderData(show: true),
+                  gridData: FlGridData(show: true),
+                ),
+              ),
+            ),
+          ),
+          // Negative Thoughts Reduction Bar Chart
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Negative Thoughts Reduction',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 300,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: BarChart(
+                BarChartData(
+                  barGroups: reductionBarGroups,
+                  titlesData: _buildTitlesData(progressData),
+                  borderData: FlBorderData(show: true),
+                  gridData: FlGridData(show: true),
+                ),
+              ),
+            ),
+          ),
+          // Positive Thoughts Increase Bar Chart
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Positive Thoughts Increase',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: 300,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: BarChart(
+                BarChartData(
+                  barGroups: increaseBarGroups,
+                  titlesData: _buildTitlesData(progressData),
+                  borderData: FlBorderData(show: true),
+                  gridData: FlGridData(show: true),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  FlTitlesData _buildTitlesData(List<ProgressData> progressData) {
+    return FlTitlesData(
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          getTitlesWidget: (value, meta) {
+            int index = value.toInt();
+            if (index >= 0 && index < progressData.length) {
+              DateTime date = progressData[index].date;
+              return Text(
+                DateFormat('MM/dd').format(date),
+                style: const TextStyle(fontSize: 10),
+              );
+            }
+            return const Text('');
+          },
+        ),
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(showTitles: true),
+      ),
+      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    );
+  }
+}

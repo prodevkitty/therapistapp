@@ -54,6 +54,8 @@ dependencies:
   http: ^1.0.0
   socket_io_client: ^3.0.2
   font_awesome_flutter: ^10.3.0
+  fl_chart: ^0.69.2
+  infinite_carousel: ^1.1.1
 
 dev_dependencies:
   test: ^1.17.10

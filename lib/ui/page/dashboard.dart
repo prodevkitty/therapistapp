@@ -10,6 +10,7 @@ import 'package:therapistapp/widgets/newWidget/emptyList.dart';
 import 'package:therapistapp/widgets/tweet/tweet.dart';
 import 'package:therapistapp/widgets/tweet/widgets/tweetBottomSheet.dart';
 import 'package:provider/provider.dart';
+import 'package:infinite_carousel/infinite_carousel.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard(
@@ -95,11 +96,29 @@ class _Dashboard extends StatelessWidget {
                 preferredSize: const Size.fromHeight(0.0),
               ),
             ),
-            const SliverToBoxAdapter(
-              child: EmptyList(
-                'No Tweet added yet',
-                subTitle:
-                    'When new Tweet added, they\'ll show up here \n Tap tweet button to add new',
+            SliverToBoxAdapter(
+              child: Container(
+                height: context.height - 135,
+                color: TwitterColor.mystic,
+                child: SingleChildScrollView(child:Column(children:[
+                  SizedBox(
+                    height: 120,
+                    child: InfiniteCarousel.builder(
+                      controller: slickController,
+                      itemBuilder: (context, index, realIndex) => _statData(
+                          statItems[index]["svgPath"],
+                          statItems[index]["title"],
+                          statItems[index]["value"],
+                          statItems[index]["color"]),
+                      itemCount: 4,
+                      itemExtent: MediaQuery.of(context).size.width / 2 - 16,
+                      axisDirection: Axis.horizontal,
+                      loop: true,
+                      center: false,
+                      // infiniteScroll: true,
+                    ),
+                  ),
+                ]))
               ),
             )
           ],

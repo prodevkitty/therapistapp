@@ -88,11 +88,14 @@ class _ContactPageBody extends StatelessWidget {
                 preferredSize: const Size.fromHeight(0.0),
               ),
             ),
-            const SliverToBoxAdapter(
-              child: EmptyList(
-                'No contact added yet',
-                subTitle:
-                    'When new contact added, they\'ll show up here \n Tap contact button to add new',
+            SliverToBoxAdapter(
+              child: Container(
+                height: context.height - 135,
+                color: TwitterColor.mystic,
+                child: NotifyText(
+                  title: "Contact",
+                  subTitle: "please contact me",
+                )
               ),
             ),
           ],

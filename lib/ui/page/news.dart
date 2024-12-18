@@ -64,42 +64,44 @@ class _NewsPageBody extends StatelessWidget {
       builder: (context, state, child) {
         return CustomScrollView(
           slivers: <Widget>[
-            child!,
-            const SliverToBoxAdapter(
-              child: EmptyList(
-                'No news added yet',
-                subTitle:
-                    'When new news added, they\'ll show up here \n Tap news button to add new',
+            SliverAppBar(
+              floating: true,
+              elevation: 0,
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {
+                      scaffoldKey.currentState!.openDrawer();
+                    },
+                  );
+                },
+              ),
+              title: Image.asset('assets/images/icon-480.png', height: 40),
+              centerTitle: true,
+              iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+              backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+              bottom: PreferredSize(
+                child: Container(
+                  color: Colors.grey.shade200,
+                  height: 1.0,
+                ),
+                preferredSize: const Size.fromHeight(0.0),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                height: context.height - 135,
+                color: TwitterColor.mystic,
+                child: NotifyText(
+                  title: "News",
+                  subTitle: "Insert news here",
+                )
               ),
             )
           ],
         );
       },
-      child: SliverAppBar(
-        floating: true,
-        elevation: 0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                scaffoldKey.currentState!.openDrawer();
-              },
-            );
-          },
-        ),
-        title: Image.asset('assets/images/icon-480.png', height: 40),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.grey.shade200,
-            height: 1.0,
-          ),
-          preferredSize: const Size.fromHeight(0.0),
-        ),
-      ),
     );
   }
 }
