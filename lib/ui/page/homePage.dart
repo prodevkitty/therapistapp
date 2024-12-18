@@ -18,6 +18,11 @@ import 'package:therapistapp/ui/page/profile/profilePage.dart';
 import 'package:therapistapp/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
 
+import 'package:therapistapp/ui/page/contact.dart';
+import 'package:therapistapp/ui/page/improvement.dart';
+import 'package:therapistapp/ui/page/news.dart';
+import 'package:therapistapp/ui/page/dashboard.dart';
+
 import 'common/sidebar.dart';
 import 'notification/notificationPage.dart';
 
@@ -164,18 +169,18 @@ class _HomePageState extends State<HomePage> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return FeedPage(
+        return Dashboard(
           scaffoldKey: _scaffoldKey,
           refreshIndicatorKey: refreshIndicatorKey,
         );
       case 1:
-        return NotificationPage(scaffoldKey: _scaffoldKey);
+        return Improvement(scaffoldKey: _scaffoldKey);
       case 2:
-        return NotificationPage(scaffoldKey: _scaffoldKey);
+        return News(scaffoldKey: _scaffoldKey);
       case 3:
-        return FeedPage(scaffoldKey: _scaffoldKey);
+        return Contact(scaffoldKey: _scaffoldKey);
       default:
-        return FeedPage(scaffoldKey: _scaffoldKey);
+        return Dashboard(scaffoldKey: _scaffoldKey);
     }
   }
 
