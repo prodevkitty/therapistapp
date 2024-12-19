@@ -3,7 +3,6 @@ import 'package:therapistapp/model/feedModel.dart';
 import 'package:therapistapp/model/user.dart';
 import 'package:therapistapp/state/feedState.dart';
 import 'package:therapistapp/state/notificationState.dart';
-import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
 import 'package:therapistapp/ui/page/profile/profilePage.dart';
 import 'package:therapistapp/ui/page/profile/widgets/circular_image.dart';
 import 'package:therapistapp/ui/theme/theme.dart';
@@ -107,7 +106,7 @@ class PostLikeTile extends StatelessWidget {
               var state = Provider.of<FeedState>(context, listen: false);
               state.getPostDetailFromDatabase(null, model: model);
 
-              Navigator.push(context, FeedPostDetail.getRoute(model.key!));
+              // Navigator.push(context, FeedPostDetail.getRoute(model.key!));
             },
             title: _userList(context, model.likeList),
             subtitle: Padding(

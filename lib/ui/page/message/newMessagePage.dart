@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:therapistapp/model/user.dart';
-import 'package:therapistapp/state/chats/chatState.dart';
 import 'package:therapistapp/state/searchState.dart';
 import 'package:therapistapp/ui/page/profile/widgets/circular_image.dart';
 import 'package:therapistapp/ui/theme/theme.dart';

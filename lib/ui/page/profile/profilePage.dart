@@ -3,7 +3,6 @@ import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/model/feedModel.dart';
 import 'package:therapistapp/model/user.dart';
-import 'package:therapistapp/state/chats/chatState.dart';
 import 'package:therapistapp/state/feedState.dart';
 import 'package:therapistapp/ui/page/profile/EditProfilePage.dart';
 import 'package:therapistapp/ui/page/profile/follow/followerListPage.dart';

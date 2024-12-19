@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/model/feedModel.dart';
 import 'package:therapistapp/state/feedState.dart';
-import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
+// import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
 import 'package:therapistapp/widgets/tweet/tweet.dart';
 import 'package:therapistapp/widgets/tweet/widgets/unavailableTweet.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class ParentTweetWidget extends StatelessWidget {
   void onTweetPressed(BuildContext context, FeedModel model) {
     var feedstate = Provider.of<FeedState>(context, listen: false);
     feedstate.getPostDetailFromDatabase(null, model: model);
-    Navigator.push(context, FeedPostDetail.getRoute(model.key!));
+    // Navigator.push(context, FeedPostDetail.getRoute(model.key!));
   }
 
   @override

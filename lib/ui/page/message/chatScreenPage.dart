@@ -20,7 +20,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   final messageController = TextEditingController();
   String? senderId;
   String userImage =
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SRRmhH4X5N2e4QalcoxVbzYsD44C-sQv-w&s';
+      'assats/images/logo_therabot.png';
   late ScrollController _controller;
   late GlobalKey<ScaffoldState> _scaffoldKey;
 
@@ -118,16 +118,16 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 ? const SizedBox()
                 : CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    backgroundImage: customAdvanceNetworkImage(userImage),
+                    backgroundImage: AssetImage("assets/images/logo_therabot.png"),
                   ),
             Expanded(
               child: Container(
                 alignment:
                     myMessage ? Alignment.centerRight : Alignment.centerLeft,
                 margin: EdgeInsets.only(
-                  right: myMessage ? 10 : (context.width / 4),
+                  right: myMessage ? 10 : (context.width / 7),
                   top: 20,
-                  left: myMessage ? (context.width / 4) : 10,
+                  left: myMessage ? (context.width / 7) : 10,
                 ),
                 child: Stack(
                   children: <Widget>[
@@ -185,20 +185,33 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             thickness: 0,
             height: 1,
           ),
-          TextField(
+            TextField(
             onSubmitted: (val) async {
               submitMessage();
             },
             controller: messageController,
             decoration: InputDecoration(
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
               alignLabelWithHint: true,
               hintText: 'Start with a message...',
-              suffixIcon: IconButton(
-                  icon: const Icon(Icons.send), onPressed: submitMessage),
+                suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                    IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: submitMessage,
+                    ),
+                    IconButton(
+                    icon: const Icon(Icons.mic),
+                    onPressed: () {
+                      // Add functionality to handle voice input
+                    },
+                    ),
+                ],
+                ),
             ),
-          ),
+            ),
         ],
       ),
     );

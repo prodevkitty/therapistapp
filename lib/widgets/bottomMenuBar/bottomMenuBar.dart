@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:therapistapp/state/appState.dart';
-import 'package:therapistapp/ui/theme/theme.dart';
 import 'package:therapistapp/widgets/bottomMenuBar/tabItem.dart';
 import 'package:provider/provider.dart';
 
-import '../customWidgets.dart';
 
 class BottomMenubar extends StatefulWidget {
   const BottomMenubar({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For formatting dates
+import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class ProgressData {
@@ -26,134 +26,112 @@ class ProgressChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<BarChartGroupData> stressBarGroups = [];
-    List<BarChartGroupData> reductionBarGroups = [];
-    List<BarChartGroupData> increaseBarGroups = [];
-
-    for (int i = 0; i < progressData.length; i++) {
-      ProgressData entry = progressData[i];
-      double xValue = i.toDouble(); // Use the index as x-axis value
-
-      stressBarGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: entry.stressLevel,
-              color: Colors.red,
-              width: 10,
-            ),
-          ],
-        ),
-      );
-
-      reductionBarGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: entry.negativeThoughtsReduction,
-              color: Colors.blue,
-              width: 10,
-            ),
-          ],
-        ),
-      );
-
-      increaseBarGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: entry.positiveThoughtsIncrease,
-              color: Colors.green,
-              width: 10,
-            ),
-          ],
-        ),
-      );
-    }
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Your Progress Over Time',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          // Stress Level Bar Chart
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Stress Levels',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(
-            height: 300,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: BarChart(
-                BarChartData(
-                  barGroups: stressBarGroups,
-                  titlesData: _buildTitlesData(progressData),
-                  borderData: FlBorderData(show: true),
-                  gridData: FlGridData(show: true),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: EdgeInsets.all(12),  
+            child: Center(
+              child: Text(
+                'Your Progress Over Time',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          // Negative Thoughts Reduction Bar Chart
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Negative Thoughts Reduction',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+          _buildLineChart(
+            progressData,
+            'Stress Levels',
+            (data) => data.stressLevel,
+            const [Colors.red, Colors.orange],
           ),
-          SizedBox(
-            height: 300,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: BarChart(
-                BarChartData(
-                  barGroups: reductionBarGroups,
-                  titlesData: _buildTitlesData(progressData),
-                  borderData: FlBorderData(show: true),
-                  gridData: FlGridData(show: true),
-                ),
-              ),
-            ),
+          _buildLineChart(
+            progressData,
+            'Negative Thoughts Reduction',
+            (data) => data.negativeThoughtsReduction,
+            const [Colors.blue, Colors.lightBlueAccent],
           ),
-          // Positive Thoughts Increase Bar Chart
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Positive Thoughts Increase',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(
-            height: 300,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: BarChart(
-                BarChartData(
-                  barGroups: increaseBarGroups,
-                  titlesData: _buildTitlesData(progressData),
-                  borderData: FlBorderData(show: true),
-                  gridData: FlGridData(show: true),
-                ),
-              ),
-            ),
+          _buildLineChart(
+            progressData,
+            'Positive Thoughts Increase',
+            (data) => data.positiveThoughtsIncrease,
+            const [Colors.green, Colors.lightGreenAccent],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLineChart(
+    List<ProgressData> data,
+    String title,
+    double Function(ProgressData) valueSelector,
+    List<Color> gradientColors,
+  ) {
+    List<FlSpot> spots = data
+        .asMap()
+        .entries
+        .map((entry) => FlSpot(entry.key.toDouble(), valueSelector(entry.value)))
+        .toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(height: 20),
+        SizedBox(
+          height: 300,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: true),
+                titlesData: _buildTitlesData(data),
+                borderData: FlBorderData(
+                  show: true,
+                  border: const Border(
+                    left: BorderSide(color: Colors.grey),
+                    bottom: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                minY: 0,
+                maxY: 10,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spots,
+                    isCurved: true,
+                    gradient: LinearGradient(colors: gradientColors),
+                    barWidth: 4,
+                    belowBarData: BarAreaData(
+                      show: true,
+                      gradient: LinearGradient(
+                        colors: gradientColors
+                            .map((color) => color.withOpacity(0.2))
+                            .toList(),
+                      ),
+                    ),
+                    dotData: const FlDotData(show: false),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+      ],
+      
     );
   }
 
@@ -166,17 +144,28 @@ class ProgressChart extends StatelessWidget {
             int index = value.toInt();
             if (index >= 0 && index < progressData.length) {
               DateTime date = progressData[index].date;
-              return Text(
-                DateFormat('MM/dd').format(date),
-                style: const TextStyle(fontSize: 10),
-              );
+                return Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    DateFormat('MM/dd').format(date),
+                    style: const TextStyle(fontSize: 10),
+                  ),
+                );
             }
             return const Text('');
           },
         ),
       ),
       leftTitles: AxisTitles(
-        sideTitles: SideTitles(showTitles: true),
+        sideTitles: SideTitles(
+          showTitles: true,
+          getTitlesWidget: (value, meta) {
+        return Text(
+          value.toString(),
+          style: const TextStyle(fontSize: 10),
+        );
+          },
+        ),
       ),
       topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),

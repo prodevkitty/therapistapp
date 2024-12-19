@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:therapistapp/ui/page/Auth/selectAuthMethod.dart';
 import 'package:therapistapp/ui/page/Auth/verifyEmail.dart';
 import 'package:therapistapp/ui/page/common/splash.dart';
-import 'package:therapistapp/ui/page/feed/composeTweet/composeTweet.dart';
-import 'package:therapistapp/ui/page/feed/composeTweet/state/composeTweetState.dart';
+// import 'package:therapistapp/ui/page/feed/composeTweet/composeTweet.dart';
+// import 'package:therapistapp/ui/page/feed/composeTweet/state/composeTweetState.dart';
 import 'package:therapistapp/ui/page/homePage.dart';
-import 'package:therapistapp/ui/page/message/conversationInformation/conversationInformation.dart';
+// import 'package:therapistapp/ui/page/message/conversationInformation/conversationInformation.dart';
 import 'package:therapistapp/ui/page/message/newMessagePage.dart';
 import 'package:therapistapp/ui/page/profile/follow/followerListPage.dart';
 import 'package:therapistapp/ui/page/search/SearchPage.dart';
@@ -29,8 +29,8 @@ import 'customRoute.dart';
 import '../ui/page/Auth/forgetPasswordPage.dart';
 import '../ui/page/Auth/signin.dart';
 import '../ui/page/Auth/signup.dart';
-import '../ui/page/feed/feedPostDetail.dart';
-import '../ui/page/feed/imageViewPage.dart';
+// import '../ui/page/feed/feedPostDetail.dart';
+// import '../ui/page/feed/imageViewPage.dart';
 import '../ui/page/message/chatScreenPage.dart';
 import '../ui/page/profile/profilePage.dart';
 import '../widgets/customWidgets.dart';
@@ -54,29 +54,29 @@ class Routes {
       return null;
     }
     switch (pathElements[1]) {
-      case "ComposeTweetPage":
-        bool isRetweet = false;
-        bool isTweet = false;
-        if (pathElements.length == 3 && pathElements[2].contains('retweet')) {
-          isRetweet = true;
-        } else if (pathElements.length == 3 &&
-            pathElements[2].contains('tweet')) {
-          isTweet = true;
-        }
-        return CustomRoute<bool>(
-            builder: (BuildContext context) =>
-                ChangeNotifierProvider<ComposeTweetState>(
-                  create: (_) => ComposeTweetState(),
-                  child:
-                      ComposeTweetPage(isRetweet: isRetweet, isTweet: isTweet),
-                ));
-      case "FeedPostDetail":
-        var postId = pathElements[2];
-        return SlideLeftRoute<bool>(
-            builder: (BuildContext context) => FeedPostDetail(
-                  postId: postId,
-                ),
-            settings: const RouteSettings(name: 'FeedPostDetail'));
+      // case "ComposeTweetPage":
+      //   bool isRetweet = false;
+      //   bool isTweet = false;
+      //   if (pathElements.length == 3 && pathElements[2].contains('retweet')) {
+      //     isRetweet = true;
+      //   } else if (pathElements.length == 3 &&
+      //       pathElements[2].contains('tweet')) {
+      //     isTweet = true;
+      //   }
+      //   return CustomRoute<bool>(
+      //       builder: (BuildContext context) =>
+      //           ChangeNotifierProvider<ComposeTweetState>(
+      //             create: (_) => ComposeTweetState(),
+      //             child:
+      //                 ComposeTweetPage(isRetweet: isRetweet, isTweet: isTweet),
+      //           ));
+      // case "FeedPostDetail":
+      //   var postId = pathElements[2];
+      //   return SlideLeftRoute<bool>(
+      //       builder: (BuildContext context) => FeedPostDetail(
+      //             postId: postId,
+      //           ),
+      //       settings: const RouteSettings(name: 'FeedPostDetail'));
       case "ProfilePage":
         String profileId;
         if (pathElements.length > 2) {
@@ -88,14 +88,14 @@ class Routes {
         }
         return CustomRoute(builder: (BuildContext context) => const HomePage());
 
-      case "CreateFeedPage":
-        return CustomRoute<bool>(
-            builder: (BuildContext context) =>
-                ChangeNotifierProvider<ComposeTweetState>(
-                  create: (_) => ComposeTweetState(),
-                  child:
-                      const ComposeTweetPage(isRetweet: false, isTweet: true),
-                ));
+      // case "CreateFeedPage":
+      //   return CustomRoute<bool>(
+      //       builder: (BuildContext context) =>
+      //           ChangeNotifierProvider<ComposeTweetState>(
+      //             create: (_) => ComposeTweetState(),
+      //             child:
+      //                 const ComposeTweetPage(isRetweet: false, isTweet: true),
+      //           ));
 
       case "SignIn":
         return CustomRoute<bool>(builder: (BuildContext context) => SignIn());
@@ -107,9 +107,9 @@ class Routes {
       case "SearchPage":
         return CustomRoute<bool>(
             builder: (BuildContext context) => SearchPage());
-      case "ImageViewPge":
-        return CustomRoute<bool>(
-            builder: (BuildContext context) => const ImageViewPge());
+      // case "ImageViewPge":
+      //   return CustomRoute<bool>(
+      //       builder: (BuildContext context) => const ImageViewPge());
       case "ChatScreenPage":
         return CustomRoute<bool>(
             builder: (BuildContext context) => const ChatScreenPage());

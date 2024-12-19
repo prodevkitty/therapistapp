@@ -3,7 +3,7 @@ import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/model/feedModel.dart';
 import 'package:therapistapp/state/feedState.dart';
-import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
+// import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
 import 'package:therapistapp/ui/page/profile/widgets/circular_image.dart';
 import 'package:therapistapp/ui/theme/theme.dart';
 import 'package:therapistapp/widgets/customWidgets.dart';
@@ -127,8 +127,8 @@ class RetweetWidget extends StatelessWidget {
               onPressed: () {
                 feedstate.getPostDetailFromDatabase(null,
                     model: snapshot.data!);
-                Navigator.push(
-                    context, FeedPostDetail.getRoute(snapshot.data!.key!));
+                // Navigator.push(
+                //     context, FeedPostDetail.getRoute(snapshot.data!.key!));
               },
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(15)),

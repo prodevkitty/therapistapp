@@ -11,6 +11,7 @@ import 'package:therapistapp/ui/theme/theme.dart';
 import 'package:therapistapp/widgets/customWidgets.dart';
 import 'package:therapistapp/widgets/url_text/customUrlText.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SidebarMenu extends StatefulWidget {
   const SidebarMenu({Key? key, this.scaffoldKey}) : super(key: key);
@@ -94,21 +95,21 @@ class _SidebarMenuState extends State<SidebarMenu> {
                   iconColor: AppColor.primary,
                   paddingIcon: 20),
             ),
-            Container(
-              alignment: Alignment.center,
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    width: 17,
-                  ),
-                  _textButton(context, state.userModel!.getFollower,
-                      ' Followers', 'FollowerListPage'),
-                  const SizedBox(width: 10),
-                  _textButton(context, state.userModel!.getFollowing,
-                      ' Following', 'FollowingListPage'),
-                ],
-              ),
-            ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   child: Row(
+            //     children: <Widget>[
+            //       const SizedBox(
+            //         width: 17,
+            //       ),
+            //       _textButton(context, state.userModel!.getFollower,
+            //           ' Followers', 'FollowerListPage'),
+            //       const SizedBox(width: 10),
+            //       _textButton(context, state.userModel!.getFollowing,
+            //           ' Following', 'FollowingListPage'),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       );
@@ -233,10 +234,22 @@ class _SidebarMenuState extends State<SidebarMenu> {
     );
   }
 
+  // void _logOut() {
+  //   final state = Provider.of<AuthState>(context, listen: false);
+  //   Navigator.pop(context);
+  //   state.logoutCallback();
+  // }
+
+    Future<void> deleteToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token'); // Replace 'token' with the key you used to store the token
+  }
+
   void _logOut() {
-    final state = Provider.of<AuthState>(context, listen: false);
-    Navigator.pop(context);
-    state.logoutCallback();
+    deleteToken().then((_) {
+      // Navigate to the login page or perform other logout actions
+      Navigator.pushReplacementNamed(context, '/login');
+    });
   }
 
   void _navigateTo(String path) {
@@ -265,17 +278,17 @@ class _SidebarMenuState extends State<SidebarMenu> {
                     Navigator.push(
                         context, ProfilePage.getRoute(profileId: state.userId));
                   }),
-                  _menuListRowButton(
-                    'Bookmark',
-                    icon: AppIcon.bookmark,
-                    isEnable: true,
-                    onPressed: () {
-                      Navigator.push(context, BookmarkPage.getRoute());
-                    },
-                  ),
-                  _menuListRowButton('Lists', icon: AppIcon.lists),
-                  _menuListRowButton('Moments', icon: AppIcon.moments),
-                  const Divider(),
+                  // _menuListRowButton(
+                  //   'Bookmark',
+                  //   icon: AppIcon.bookmark,
+                  //   isEnable: true,
+                  //   onPressed: () {
+                  //     Navigator.push(context, BookmarkPage.getRoute());
+                  //   },
+                  // ),
+                  // _menuListRowButton('Lists', icon: AppIcon.lists),
+                  // _menuListRowButton('Moments', icon: AppIcon.moments),
+                  // const Divider(),
                   _menuListRowButton('Settings and privacy', isEnable: true,
                       onPressed: () {
                     _navigateTo('SettingsAndPrivacyPage');

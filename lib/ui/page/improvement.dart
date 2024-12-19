@@ -34,7 +34,7 @@ class Improvement extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: _floatingActionButton(context),
-      backgroundColor: TwitterColor.mystic,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox(
           height: context.height,
@@ -58,7 +58,7 @@ class Improvement extends StatelessWidget {
   }
 }
 
-class _Improvement extends StatelessWidget {
+class _Improvement extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   final GlobalKey<RefreshIndicatorState>? refreshIndicatorKey;
@@ -66,6 +66,13 @@ class _Improvement extends StatelessWidget {
   const _Improvement(
       {Key? key, required this.scaffoldKey, this.refreshIndicatorKey})
       : super(key: key);
+
+  @override
+  __ImprovementState createState() => __ImprovementState();
+}
+
+class __ImprovementState extends State<_Improvement> {
+  bool english = true;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +87,7 @@ class _Improvement extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Icons.menu),
                 onPressed: () {
-                  scaffoldKey.currentState!.openDrawer();
+                  widget.scaffoldKey.currentState!.openDrawer();
                 },
               );
             },
@@ -96,6 +103,19 @@ class _Improvement extends StatelessWidget {
             ),
             preferredSize: const Size.fromHeight(0.0),
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    english = !english;
+                  });
+                },
+                icon: Image.asset(
+                    english
+                        ? 'assets/images/en.png'
+                        : 'assets/images/es.png',
+                    width: 24))
+          ],
         ),
         SliverToBoxAdapter(          
           child: Container(
@@ -105,38 +125,38 @@ class _Improvement extends StatelessWidget {
                 ProgressData(
                   date: DateTime(2024, 12, 1),
                   stressLevel: 7.0,
-                  negativeThoughtsReduction: 3.0,
-                  positiveThoughtsIncrease: 4.0,
+                  negativeThoughtsReduction: 1.0,
+                  positiveThoughtsIncrease: 1.0,
                 ),
                 ProgressData(
                   date: DateTime(2024, 12, 2),
                   stressLevel: 6.5,
                   negativeThoughtsReduction: 3.5,
-                  positiveThoughtsIncrease: 4.5,
+                  positiveThoughtsIncrease: 3.5,
                 ),
                 ProgressData(
                   date: DateTime(2024, 12, 3),
-                  stressLevel: 6.0,
-                  negativeThoughtsReduction: 4.0,
+                  stressLevel: 5.0,
+                  negativeThoughtsReduction: 5.0,
                   positiveThoughtsIncrease: 5.0,
                 ),
                 ProgressData(
                   date: DateTime(2024, 12, 4),
                   stressLevel: 5.5,
-                  negativeThoughtsReduction: 4.5,
+                  negativeThoughtsReduction: 5.5,
                   positiveThoughtsIncrease: 5.5,
                 ),
                 ProgressData(
                   date: DateTime(2024, 12, 5),
-                  stressLevel: 5.0,
-                  negativeThoughtsReduction: 5.0,
+                  stressLevel: 4.0,
+                  negativeThoughtsReduction: 7.0,
                   positiveThoughtsIncrease: 6.0,
                 ),
                 ProgressData(
                   date: DateTime(2024, 12, 6),
-                  stressLevel: 4.5,
-                  negativeThoughtsReduction: 5.5,
-                  positiveThoughtsIncrease: 6.5,
+                  stressLevel: 1.5,
+                  negativeThoughtsReduction: 8.2,
+                  positiveThoughtsIncrease: 8.5,
                 ),
               ],
             ),

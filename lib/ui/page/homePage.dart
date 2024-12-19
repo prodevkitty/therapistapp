@@ -3,18 +3,13 @@ import 'dart:async';
 // import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:therapistapp/helper/enum.dart';
 import 'package:therapistapp/helper/utility.dart';
 import 'package:therapistapp/model/push_notification_model.dart';
 import 'package:therapistapp/state/appState.dart';
 import 'package:therapistapp/state/authState.dart';
-import 'package:therapistapp/state/chats/chatState.dart';
 import 'package:therapistapp/state/feedState.dart';
 import 'package:therapistapp/state/notificationState.dart';
 import 'package:therapistapp/ui/page/Auth/signin.dart';
-import 'package:therapistapp/ui/page/feed/feedPage.dart';
-import 'package:therapistapp/ui/page/feed/feedPostDetail.dart';
-import 'package:therapistapp/ui/page/profile/profilePage.dart';
 import 'package:therapistapp/widgets/bottomMenuBar/bottomMenuBar.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +19,6 @@ import 'package:therapistapp/ui/page/news.dart';
 import 'package:therapistapp/ui/page/dashboard.dart';
 
 import 'common/sidebar.dart';
-import 'notification/notificationPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -94,19 +88,19 @@ class _HomePageState extends State<HomePage> {
 
   void listenPushNotification(PushNotificationModel model) {
     final authState = Provider.of<AuthState>(context, listen: false);
-    var state = Provider.of<NotificationState>(context, listen: false);
+    // var state = Provider.of<NotificationState>(context, listen: false);
 
-    if (model.type == NotificationType.Message.toString() ) {
-      /// Get sender profile detail from firebase
-      state.getUserDetail(model.senderId).then((user) {
-        Navigator.pushNamed(context, '/ChatScreenPage');
-      });
-    }
-    else if (model.type == NotificationType.Mention.toString()) {
-      var feedState = Provider.of<FeedState>(context, listen: false);
-      feedState.getPostDetailFromDatabase(model.tweetId);
-      Navigator.push(context, FeedPostDetail.getRoute(model.tweetId));
-    }
+    // if (model.type == NotificationType.Message.toString() ) {
+    //   /// Get sender profile detail from firebase
+    //   state.getUserDetail(model.senderId).then((user) {
+    //     Navigator.pushNamed(context, '/ChatScreenPage');
+    //   });
+    // }
+    // else if (model.type == NotificationType.Mention.toString()) {
+    //   var feedState = Provider.of<FeedState>(context, listen: false);
+    //   feedState.getPostDetailFromDatabase(model.tweetId);
+    //   Navigator.push(context, FeedPostDetail.getRoute(model.tweetId));
+    // }
   }
 
   void initChat() {
@@ -147,15 +141,15 @@ class _HomePageState extends State<HomePage> {
   /// Redirect user to specific screen when app is launched by tapping on deep link.
   void redirectFromDeepLink(Uri deepLink) {
     cprint("Found Url from share: ${deepLink.path}");
-    var type = deepLink.path.split("/")[1];
-    var id = deepLink.path.split("/")[2];
-    if (type == "profilePage") {
-      Navigator.push(context, ProfilePage.getRoute(profileId: id));
-    } else if (type == "tweet") {
-      var feedState = Provider.of<FeedState>(context, listen: false);
-      feedState.getPostDetailFromDatabase(id);
-      Navigator.push(context, FeedPostDetail.getRoute(id));
-    }
+    // var type = deepLink.path.split("/")[1];
+    // var id = deepLink.path.split("/")[2];
+    // if (type == "profilePage") {
+    //   Navigator.push(context, ProfilePage.getRoute(profileId: id));
+    // } else if (type == "tweet") {
+    //   var feedState = Provider.of<FeedState>(context, listen: false);
+    //   feedState.getPostDetailFromDatabase(id);
+    //   Navigator.push(context, FeedPostDetail.getRoute(id));
+    // }
   }
 
   Widget _body() {
